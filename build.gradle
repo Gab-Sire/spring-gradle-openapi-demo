@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.6.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id "org.openapi.generator" version "4.3.0"
 }
 
 group = 'net.gabsire-087'
@@ -24,14 +25,44 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.swagger:swagger-annotations:1.6.0'
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.0'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 }
 
+openApiGenerate{
+	generatorName = "spring"
+	inputSpec = "$projectDir/demo-book-api/net-gabsire087-demo-book-api-1.0.0.yml"
+	outputDir = "$buildDir/generated/"
+	apiPackage = "net.gabsire087.springgradleopenapidemo.api.v1"
+	modelPackage = "net.gabsire087.springgradleopenapidemo.api.v1.model"
+	ignoreFileOverride = "./.openapi-generator-ignore"
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "${buildDir}/generated/src/main/java"
+			srcDir "${buildDir}/generated/sources/annotationProcessor/java/main"
+		}
+	}
+}
+
+compileJava.dependsOn tasks.openApiGenerate
+
 test {
 	useJUnitPlatform()
+}
+
+springBoot {
+	mainClassName = "net/gabsire087/springgradleopenapidemo/SpringGradleOpenapiDemoApplication.java"
 }
