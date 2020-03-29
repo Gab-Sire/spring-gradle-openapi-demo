@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.data:spring-data-jpa'
 	implementation 'io.swagger:swagger-annotations:1.6.0'
 	implementation 'io.springfox:springfox-swagger2:2.9.2'
 
@@ -39,6 +40,7 @@ dependencies {
 	}
 }
 
+// out-of-the-box task with openapi-genrator plugin
 openApiGenerate{
 	generatorName = "spring"
 	inputSpec = "$projectDir/demo-book-api/net-gabsire087-demo-book-api-1.0.0.yml"
@@ -48,6 +50,7 @@ openApiGenerate{
 	ignoreFileOverride = "./.openapi-generator-ignore"
 }
 
+// consider generated classes as source
 sourceSets {
 	main {
 		java {
@@ -63,6 +66,14 @@ test {
 	useJUnitPlatform()
 }
 
+// determine which main class to use
 springBoot {
-	mainClassName = "net/gabsire087/springgradleopenapidemo/SpringGradleOpenapiDemoApplication.java"
+	mainClassName = "net.gabsire087.springgradleopenapidemo.SpringGradleOpenapiDemoApplication"
+}
+
+// configuration to automatically run Spring Boot with profile dev
+def activeProfiles = 'dev'
+
+bootRun {
+	args = ["--spring.profiles.active=" + activeProfiles]
 }
