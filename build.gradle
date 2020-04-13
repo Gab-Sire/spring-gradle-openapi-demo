@@ -52,6 +52,11 @@ sourceSets {
 	}
 }
 
+//second openApiGenerate task
+//task generateWhatever(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
+	//parameters here
+//}
+
 compileJava.dependsOn tasks.openApiGenerate
 
 test {
